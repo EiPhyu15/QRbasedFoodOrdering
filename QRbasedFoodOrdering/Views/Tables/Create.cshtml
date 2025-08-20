@@ -1,0 +1,92 @@
+﻿@model QRbasedFoodOrdering.Models.Table
+
+@{
+    ViewBag.Title = "Create Table";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-sm border-0 rounded">
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0">Add New Table</h4>
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm())
+            {
+                <div class="mb-3">
+                    @Html.LabelFor(model => model.TableName, new { @class = "form-label fw-bold" })
+                    @Html.TextBoxFor(model => model.TableName, new { @class = "form-control", placeholder = "Enter table name or number" })
+                </div>
+
+                <div class="mb-3">
+                    @Html.LabelFor(model => model.Capacity, new { @class = "form-label fw-bold" })
+                    @Html.TextBoxFor(model => model.Capacity, new { @class = "form-control", placeholder = "Enter seating capacity", type = "number", min = "1" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.IsAvailable, htmlAttributes: new { @class = "control-label" })
+                    @Html.DropDownListFor(model => model.IsAvailable,
+                             new SelectList(new[]
+                             {
+                new { Value = "true", Text = "Available" },
+                new { Value = "false", Text = "Not Available" }
+                }, "Value", "Text"),
+                             "Select Availability",
+                             new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.IsAvailable, "", new { @class = "text-danger" })
+                </div>
+
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="@Url.Action("Index")" class="btn btn-outline-secondary">Back to List</a>
+                    <button type="submit" class="btn btn-success px-4">Create</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+
+@* @model QRbasedFoodOrdering.Models.Table
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Table</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="TableName" class="control-label"></label>
+                <input asp-for="TableName" class="form-control" />
+                <span asp-validation-for="TableName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Capacity" class="control-label"></label>
+                <input asp-for="Capacity" class="form-control" />
+                <span asp-validation-for="Capacity" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsAvailable" /> @Html.DisplayNameFor(model => model.IsAvailable)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+ *@

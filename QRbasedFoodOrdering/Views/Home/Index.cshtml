@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container-fluid p-0">
+    <div class="banner position-relative text-dark">
+
+
+        <img src="~/Images/homepage.jpg" class="img-fluid w-100" alt="hotel Image">
+        <div class="position-absolute top-50 start-50 translate-middle text-center">
+            <h1 class="display-4 fw-bold">Welcome Our Restaurant</h1>
+            <p class="lead">Explore Our Menu</p>
+
+            @* <a asp-controller="Rooms" asp-action="GetAllRooms" class="btn btn-success btn-sm mt-3">Book Now</a> *@
+            <a asp-controller="Categories" asp-action="Index" class="btn btn-success btn-sm mt-3">Explore Menu</a>
+
+        </div>
+    </div>
+</div>
+@* <div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+ *@
+@* @{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div> *@

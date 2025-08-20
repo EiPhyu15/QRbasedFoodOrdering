@@ -1,0 +1,118 @@
+﻿@model IEnumerable<QRbasedFoodOrdering.Models.Category>
+
+
+@{
+    ViewBag.Title = "Our Menu";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2 class="fw-bold mb-4">Our Menu</h2>
+    <div class="row">
+        @foreach (var category in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm border-0 rounded-3 h-100">
+                    <img src="~/images/@category.ImageUrl" class="card-img-top" alt="@category.Description">
+
+
+                    <div class="card-body text-center">
+                        <h5 class="card-title fw-bold">@category.Description</h5>
+                        <p class="text-muted">@category.Description</p>
+                        <a href="@Url.Action("ByCategory", "FoodItems", new { id = category.CategoryId })"
+                           class="btn btn-primary w-100">
+                            View Items
+                        </a>
+
+
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+
+@{
+    ViewBag.Title = "Menu";
+}
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Menu</h2>
+        <a href="@Url.Action("Create")" class="btn btn-primary">+ Add New Item</a>
+    </div>
+    <div class="row g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 col-lg-3">
+                <div class="card h-100 shadow-sm border-0 rounded">
+                    <img src="~/images/@item.ImageUrl" alt="@item.Description" width="100" height="100" />
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">@item.Description</h5>
+
+
+                        <p class="small text-secondary mb-3">
+                            @(item.IsActive ? "Available" : "Not Available")
+                        </p>
+                        <div class="d-flex justify-content-between">
+                            <a href="@Url.Action("Edit", new { id = item.CategoryId })" class="btn btn-sm btn-outline-primary">Edit</a>
+                            <a href="@Url.Action("Details", new { id = item.CategoryId })" class="btn btn-sm btn-outline-info">Details</a>
+                            <a href="@Url.Action("Delete", new { id = item.CategoryId})" class="btn btn-sm btn-outline-danger">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+@* @model IEnumerable<QRbasedFoodOrdering.Models.Category>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImageUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImageUrl)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsActive)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CategoryId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.CategoryId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.CategoryId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+ *@
