@@ -1,0 +1,28 @@
+﻿  @model IEnumerable<QRbasedFoodOrdering.Models.Order>
+@{
+    ViewData["Title"] = "Bill Requests";
+}
+<h2>Bill Requests</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Table</th>
+            <th>Created At</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.OrderId</td>
+                <td>@order.Table?.TableName</td>
+                <td>@order.CreatedAt.ToString("g")</td>
+                <td>
+                    <a asp-action="BillDetails" asp-controller="Kitchen" asp-route-id="@order.OrderId" class="btn btn-primary btn-sm">View & Print</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

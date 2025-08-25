@@ -25,28 +25,39 @@ namespace QRbasedFoodOrdering.Controllers
             _context = context;
 
         }
-        public async Task<IActionResult> AddToCart(int foodid, int tableid)
+        public async Task<IActionResult> AddToCart(int foodid, int tableid, int cartitemid)
         {
             ItemCartId = GetCartId();
-            var cartItem = await _context.CartItem
-                    .FirstOrDefaultAsync(c => c.FoodItemId == foodid && c.TableId == tableid);
-            if (cartItem == null)
+            CartItem cartitem = new CartItem
             {
-                cartItem = new CartItem
-                {
-                    FoodItemId = foodid,
-                    TableId = tableid,
-                    Quantity = 1,
-                    Price = (int)_context.FoodItem.FirstOrDefault(f => f.FoodItemId == foodid).Price
-                };
-                _context.CartItem.Add(cartItem);
-            }
-            else
-            {
-                cartItem.Quantity++;
-                //cartItem.Price += _context.FoodItem.FirstOrDefault(f => f.FoodItemId == foodid).Price;
-                //_context.CartItem.Update(cartItem);
-            }
+                FoodItemId = foodid,
+                TableId = tableid,
+                Quantity = 1,
+                CartId = ItemCartId,
+                Price = (int)_context.FoodItem.FirstOrDefault(f => f.FoodItemId == foodid).Price
+            };
+            _context.CartItem.Add(cartitem);
+
+
+            //if (cartItem == null)
+            // {
+            //cartItem = new CartItem
+            //{
+            //    FoodItemId = foodid,
+            //    TableId = tableid,
+            //    Quantity = 1,
+            //    CartItemId = cartitemid,
+            //    Price = (int)_context.FoodItem.FirstOrDefault(f => f.FoodItemId == foodid).Price
+            //};
+            //var cartItem = await _context.CartItem.AddAsync();
+            //_context.CartItem.Add(cartItem);
+            //}
+            //else
+            // {
+            //cartItem.Quantity++;
+            //cartItem.Price += _context.FoodItem.FirstOrDefault(f => f.FoodItemId == foodid).Price;
+            //_context.CartItem.Update(cartItem);
+            // }
             await _context.SaveChangesAsync();
             return RedirectToAction("DisplayCart", new {id=tableid});
         }

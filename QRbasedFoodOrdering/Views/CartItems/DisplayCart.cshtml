@@ -29,38 +29,38 @@
     </thread>
     <tbody>
         @{
-			var overallTotal = 0.0;
+            var overallTotal = 0.0;
         }
 
-		@foreach (var item in Model)
-		{
-			
-			<tr>
-				<td>
-					@Html.DisplayFor(modelItem => item.FoodItem.Title)
-				</td>
-				@* <td>
+        @foreach (var item in Model)
+        {
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FoodItem.Title)
+                </td>
+                @* <td>
                     @Html.DisplayFor(modelItem => item.FoodItem.imageUrl)
                 </td> *@
-				<td>
-					@Html.DisplayFor(modelItem => item.FoodItem.Price)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Quantity)
-				</td>
-				<td>
-                   @{
-                       var totalAmount = item.FoodItem.Price * item.Quantity;
-                    overallTotal += totalAmount;
-                   }
-					@totalAmount.ToString("C2")
-				</td>
                 <td>
-					<a class="btn btn-danger" asp-controller="CartItems" asp-action="DeleteCartItem" asp-route-id="@item.CartItemId">Delete</a>"
+                    @Html.DisplayFor(modelItem => item.FoodItem.Price)
                 </td>
-			</tr>
-		}
-        
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @{
+                        var totalAmount = item.FoodItem.Price * item.Quantity;
+                        overallTotal += totalAmount;
+                    }
+                    @totalAmount.ToString("C2")
+                </td>
+                <td>
+                    <a class="btn btn-danger" asp-controller="CartItems" asp-action="DeleteCartItem" asp-route-id="@item.CartItemId">Delete</a>"
+                </td>
+            </tr>
+        }
+
     </tbody>
 </table>
 <br />

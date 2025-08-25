@@ -4,15 +4,24 @@
     public enum OrderStatus
     {
         Pending,
-        InProgress,
+        Comfirmed,
         Completed,
+        BillRequested,
         Cancelled
     }
     public enum OrderDetailStatus
     {
         Pending,
-        InProgress,
-        Completed,
+        Comfirmed,
+        Preparing,
+        Served,
         Cancelled
+
+    }
+    public enum  TableStatus
+    {
+        Available,
+        Occupied,
+        Reserved
     }
 }

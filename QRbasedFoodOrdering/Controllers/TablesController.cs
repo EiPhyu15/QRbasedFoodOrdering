@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QRbasedFoodOrdering.Data;
 using QRbasedFoodOrdering.Models;
+using QRCoder;
 
 namespace QRbasedFoodOrdering.Controllers
 {
@@ -18,6 +19,70 @@ namespace QRbasedFoodOrdering.Controllers
         {
             _context = context;
         }
+        public async Task<IActionResult> Assign()
+        {
+            var availableTables = await _context.Table.Where(t=>t.Status == TableStatus.Available)
+                .Include(t=>t.Orders).ToListAsync();
+            return View(availableTables);
+
+        }
+        public async Task<IActionResult> AssignTable(int tableId)
+        {
+            var table = await _context.Table.FindAsync(tableId);
+            if (table == null)
+            {
+                return NotFound();
+            }
+
+            var openorder = await _context.Order
+                 .FirstOrDefaultAsync(o => o.TableId == tableId && o.status == OrderStatus.Pending || o.status == OrderStatus.Completed);
+               
+            if (openorder != null)
+            {
+                // If an open order exists, redirect to the order details page
+                return BadRequest("An open order already exists for this table.");
+            }
+            var guid = Guid.NewGuid().ToString();
+            var order = new Order
+            {
+                TableId = tableId,
+                CreatedAt = DateTime.Now,
+                QRCode = guid,
+                status = OrderStatus.Pending,
+            };
+            _context.Order.Add(order);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("QRCode", new { orderId = order.OrderId });
+
+        }
+        public async Task<IActionResult> QRCode(int orderId)
+        {
+            var order = await _context.Order
+                .Include(o => o.Table)
+                .FirstOrDefaultAsync(o => o.OrderId == orderId);
+            if(order == null)
+            {
+                return NotFound( );
+            }
+            
+                
+            ViewBag.Order= order;
+            return View(order);
+
+
+        }
+        public IActionResult GenerateQRCodeImage(string guid)
+        {
+            var url = Url.Action("Menu", "Order", new { guid = guid }, Request.Scheme, Request.Host.ToString());
+            if (string.IsNullOrEmpty(url))
+                return BadRequest("Unable to generate QR code URL.");
+            using var qrGenerator = new QRCodeGenerator();
+            using var qrData = qrGenerator.CreateQrCode(url, QRCodeGenerator.ECCLevel.Q);
+            var pngQrCode = new PngByteQRCode(qrData);
+            var pngBytes = pngQrCode.GetGraphic(20);
+            return File(pngBytes, "image/png");
+        }
+
 
         // GET: Tables
         public async Task<IActionResult> Index()

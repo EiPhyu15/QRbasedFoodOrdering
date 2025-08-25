@@ -18,7 +18,124 @@ namespace QRbasedFoodOrdering.Controllers
         {
             _context = context;
         }
+        public async Task<IActionResult> RequestBill(string guid)
+        {
+            if (string.IsNullOrEmpty(guid))
+                return NotFound();
+            var order = await _context.Order.FirstOrDefaultAsync(o => o.QRCode == guid && (o.status == OrderStatus.Comfirmed || o.status == OrderStatus.BillRequested));
+            if (order == null)
+            {
+                return NotFound();
+            }
+            order.status = OrderStatus.BillRequested;
+            await _context.SaveChangesAsync();
+            TempData["BillRequested"] = true;
+            return RedirectToAction("Cart", new { guid });
 
+        }
+        public async Task<IActionResult> Menu(string guid)
+        {
+            if (string.IsNullOrEmpty(guid))
+                return NotFound();
+            var order = await _context.Order.FirstOrDefaultAsync(o => o.QRCode == guid && (o.status == OrderStatus.Pending || o.status == OrderStatus.Comfirmed));
+            if (order == null)
+                return View("OrderNotFound");
+            var categories = await _context.Category.Include(c => c.FoodItems).ToListAsync();
+            ViewBag.OrderId = order.OrderId;
+            return View(categories);
+
+        }
+        public async Task<IActionResult> AddToCart(int quantity, int fooditemid, string orderguid)
+        {
+            if (string.IsNullOrEmpty(orderguid) || quantity <= 0)
+            {
+                return BadRequest();
+            }
+            var order = await _context.Order.FirstOrDefaultAsync(o => o.QRCode == orderguid && (o.status == OrderStatus.Pending || o.status == OrderStatus.Comfirmed));
+            if (order == null)
+            {
+                return NotFound();
+            }
+            var foodItem = await _context.FoodItem.FindAsync(fooditemid);
+            if (foodItem == null || !foodItem.IsActive)
+            {
+                return NotFound();
+            }
+            var existingOrderDetail = await _context.OrderDetail
+                .FirstOrDefaultAsync(od => od.OrderId == order.OrderId && od.FoodItemId == fooditemid);
+            if (existingOrderDetail != null)
+            {
+                existingOrderDetail.Quantity += quantity;
+
+            }
+            else
+            {
+                var orderDetail = new OrderDetail
+                {
+                    OrderId = order.OrderId,
+                    FoodItemId = fooditemid,
+                    Quantity = quantity,
+                    Price = foodItem.Price,
+                    Status = OrderDetailStatus.Pending
+                };
+                _context.OrderDetail.Add(orderDetail);
+            }
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Menu", new { guid = order.QRCode });
+        }
+        public async Task<IActionResult> Cart(string guid)
+        {
+            if(string.IsNullOrEmpty(guid))
+                return NotFound();
+            var order = await _context.Order.Include(o => o.Table)
+                
+                .FirstOrDefaultAsync(o => o.QRCode == guid && (o.status == OrderStatus.Pending || o.status == OrderStatus.Comfirmed || o.status==OrderStatus.BillRequested));
+            if (order == null)
+            {
+                return NotFound();
+            }
+            var pendingitem= await _context.OrderDetail
+                .Include(od => od.FoodItem)
+                .Where(od => od.OrderId == order.OrderId && od.Status == OrderDetailStatus.Pending)
+                .ToListAsync();
+            var ComfirmedItems = await _context.OrderDetail
+                .Include(od => od.FoodItem)
+                .Where(od => od.OrderId == order.OrderId && od.Status == OrderDetailStatus.Comfirmed)
+                .ToListAsync();
+            ViewBag.Order = order;
+            //ViewBag.PendingItems = pendingitem;
+            ViewBag.ComfirmedItems = ComfirmedItems;
+            return View(pendingitem);
+        }
+        public async Task<IActionResult> ConfirmOrder(string guid)
+        {
+            if (string.IsNullOrEmpty(guid))
+                return NotFound();
+            var order = await _context.Order.FirstOrDefaultAsync(o => o.QRCode == guid && (o.status == OrderStatus.Pending || o.status == OrderStatus.Comfirmed));
+            if (order == null)
+            {
+                return NotFound();
+            }
+            var pendingItems = await _context.OrderDetail
+                .Where(od => od.OrderId == order.OrderId && od.Status == OrderDetailStatus.Pending)
+                .ToListAsync();
+            if (!pendingItems.Any())
+            {
+                TempData["Message"] = "There are no pending items to confirm.";
+                return RedirectToAction("Cart", new { guid });
+            }
+            foreach (var item in pendingItems)
+            {
+                item.Status = OrderDetailStatus.Comfirmed;
+            }
+            order.status = OrderStatus.Comfirmed;
+            await _context.SaveChangesAsync();
+            TempData["Message"] = "Order confirmed successfully.";
+            return RedirectToAction("Cart", new { guid });
+
+
+
+        }
         // GET: Orders
         public async Task<IActionResult> Index()
         {

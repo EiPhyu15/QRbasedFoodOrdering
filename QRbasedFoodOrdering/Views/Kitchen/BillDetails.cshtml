@@ -1,0 +1,41 @@
+﻿@model QRbasedFoodOrdering.Models.Order
+@{
+    ViewData["Title"] = "Bill Details";
+}
+<h2>Bill Details for Order #@Model.OrderId</h2>
+<p><strong>Table:</strong> @Model.Table?.TableName</p>
+<p><strong>Created At:</strong> @Model.CreatedAt.ToString("g")</p>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderDetails)
+        {
+            <tr>
+                <td>@item.FoodItem?.Title</td>
+                <td>@item.Quantity</td>
+                <td>$@item.Price</td>
+                <td>$@(item.Price * item.Quantity)</td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3" class="text-end fw-bold">Total</td>
+            <td class="fw-bold">
+                $
+                @Model.OrderDetails.Sum(i => i.Price * i.Quantity)
+            </td>
+        </tr>
+    </tfoot>
+</table>
+<form asp-action="MarkPaid" asp-controller="Kitchen" method="post">
+    <input type="hidden" name="orderId" value="@Model.OrderId" />
+    <button type="submit" class="btn btn-success">Mark as Paid/Completed</button>
+</form>

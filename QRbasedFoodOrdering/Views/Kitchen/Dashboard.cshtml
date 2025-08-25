@@ -1,0 +1,64 @@
+﻿@model IEnumerable<QRbasedFoodOrdering.Models.OrderDetail>
+@{
+    ViewData["Title"] = "Kitchen Dashboard";
+}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<div class="container mt-4">
+    <h2><i class="bi bi-egg-fried"></i> Kitchen Dashboard</h2>
+    <table class="table table-bordered table-hover align-middle mt-4">
+        <thead class="table-light">
+            <tr>
+                <th>Table</th>
+                <th>Order ID</th>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Order?.Table?.TableName</td>
+                    <td>@item.OrderId</td>
+                    <td>@item.FoodItem?.Title</td>
+                    <td>@item.Quantity</td>
+                    <td>
+                        @if (item.Status == QRbasedFoodOrdering.Models.OrderDetailStatus.Comfirmed)
+                        {
+                            <span class="badge bg-warning text-dark">Confirmed</span>
+                        }
+                        else if (item.Status == QRbasedFoodOrdering.Models.OrderDetailStatus.Preparing)
+                        {
+                            <span class="badge bg-primary">Preparing</span>
+                        }
+                    </td>
+                    <td>
+                        @if (item.Status ==QRbasedFoodOrdering.Models.OrderDetailStatus.Comfirmed)
+                        {
+                            <form asp-action="UpdateStatus" asp-controller="Kitchen" method="post" class="d-inline">
+                                <input type="hidden" name="orderItemId" value="@item.OrderDetailId" />
+                                <input type="hidden" name="status" value="@((int)QRbasedFoodOrdering.Models.OrderDetailStatus.Preparing)" />
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-play-circle"></i> Start Preparing (Id: @item.OrderDetailId)
+                                </button>
+                            </form>
+                        }
+                        else if (item.Status ==QRbasedFoodOrdering.Models.OrderDetailStatus.Preparing)
+                        {
+                            <form asp-action="UpdateStatus" asp-controller="Kitchen" method="post" class="d-inline">
+                                <input type="hidden" name="orderItemId" value="@item.OrderDetailId" />
+                                <input type="hidden" name="status" value="@((int)QRbasedFoodOrdering.Models.OrderDetailStatus.Served)" />
+                                <button type="submit" class="btn btn-sm btn-success">
+                                    <i class="bi bi-check-circle"></i> Mark as Served
+                                </button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

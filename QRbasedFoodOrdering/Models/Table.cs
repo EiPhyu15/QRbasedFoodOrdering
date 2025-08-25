@@ -9,7 +9,8 @@ namespace QRbasedFoodOrdering.Models
         public string TableName { get; set; }
         public int Capacity { get; set; }
         public bool IsAvailable { get; set; }
-        public ICollection<CartItem> CartItems { get; set; }
+        public TableStatus Status { get; set; } // Assuming TableStatus is an enum defined elsewhere
+        //public ICollection<CartItem> CartItems { get; set; }
         public ICollection<Order> Orders { get; set; }
     }
 }

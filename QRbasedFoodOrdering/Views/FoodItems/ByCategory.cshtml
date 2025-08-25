@@ -20,7 +20,7 @@
                 <div class="card-footer">
                     <div class="d-flex justify-content-between align-items-center">
                         <span class="text-primary fw-bold">SGD @item.Price</span>
-                        <a asp-controller="Orders" asp-action="Create" asp-route-id="@item.FoodItemId" class="btn btn-sm btn-outline-primary">Order</a>
+                        <a asp-controller="OrderDetails" asp-action="create" asp-route-id="@item.FoodItemId" class="btn btn-sm btn-outline-primary">Order</a>
                     </div>
                 </div>
             </div>
