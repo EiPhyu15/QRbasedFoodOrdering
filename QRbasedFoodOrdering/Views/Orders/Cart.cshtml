@@ -7,7 +7,7 @@
 }
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-<div class="container mt-4">
+<div class="container my-8">
 	<div class="text-center mb-4">
 		<h2><i class="bi bi-cart"></i> Your Cart for Table @order?.Table?.TableName</h2>
 		<span class="badge bg-info">Order ID: @order?.OrderId</span>
@@ -49,8 +49,8 @@
                 <tr>
                     <td colspan="3" class="text-end fw-bold">Total</td>
                     <td class="fw-bold">
-                        $
-                        @Model.Sum(i => i.Price * i.Quantity)
+                       
+                        @Model.Sum(i => i.Price * i.Quantity).ToString("C")
                     </td>
                 </tr>
             </tfoot>
@@ -59,7 +59,7 @@
             <a href="@Url.Action("Menu", new { guid = order?.QRCode })" class="btn btn-secondary btn-lg me-2">
                 <i class="bi bi-arrow-left"></i> Back to Menu
             </a>
-            <form asp-action="ConfirmOrder" asp-controller="Order" method="post" class="d-inline">
+            <form asp-action="ConfirmOrder" asp-controller="Orders" method="post" class="d-inline">
                 <input type="hidden" name="guid" value="@order?.QRCode" />
                 <button type="submit" class="btn btn-success btn-lg">
                     <i class="bi bi-check-circle"></i> Confirm Order
@@ -68,9 +68,7 @@
         </div>
     }
 
-    @* @{
-    var confirmedItems = ViewBag.ConfirmedItems as IEnumerable<QR_POS.Models.OrderItem>;
-  } *@
+  
     @if (comfiremditems != null && comfiremditems.Any())
     {
         <div class="mt-5">
@@ -96,14 +94,17 @@
                     }
                 </tbody>
             </table>
+           
             <div class="text-center mt-4">
-                <form asp-action="RequestBill" asp-controller="Order" method="post" class="d-inline">
+                <form asp-action="RequestBill" asp-controller="Orders" method="post" >
                     <input type="hidden" name="guid" value="@order?.QRCode" />
+					@* <button type="submit">Submit</button> *@
                     <button type="submit" class="btn btn-warning btn-lg">
-                        <i class="bi bi-receipt"></i> Get me the Bill
+                        Get me the Bill
                     </button>
                 </form>
             </div>
         </div>
+      
     }
 </div>

@@ -26,15 +26,16 @@
                             {
                                 <div class="col-md-6 col-lg-4 mb-3">
                                     <div class="card h-100">
+                                        <img src="~/Images/@item.imageUrl" class="card-img-top" alt="Item Image">
                                         <div class="card-body">
                                             @* <h5 class="card-title">@item.</h5> *@
                                             <p class="card-text">@item.Title</p>
                                             <p class="card-text fw-bold">$@item.Price</p>
                                             @if (item.IsActive)
                                             {
-                                                <form method="post" asp-action="AddToCart" asp-controller="Order">
-                                                    <input type="hidden" name="menuItemId" value="@item.FoodItemId" />
-                                                    <input type="hidden" name="orderGuid" value="@order?.QRCode" />
+                                                <form method="post" asp-action="AddToCart" asp-controller="Orders">
+                                                    <input type="hidden" name="fooditemid" value="@item.FoodItemId" />
+                                                    <input type="hidden" name="orderId" value="@ViewBag.OrderId" />
                                                     <div class="input-group mb-2">
                                                         <input type="number" name="quantity" value="1" min="1" class="form-control" style="max-width: 80px;" />
                                                         <button type="submit" class="btn btn-success">
@@ -58,7 +59,7 @@
         }
     </div>
     <div class="text-center mt-4">
-        <a href="@Url.Action("Cart", new { guid = order?.QRCode })" class="btn btn-primary btn-lg">
+        <a href="@Url.Action("Cart", new { guid = ViewBag.Guid})" class="btn btn-primary btn-lg">
             <i class="bi bi-cart"></i> View Cart
         </a>
     </div>

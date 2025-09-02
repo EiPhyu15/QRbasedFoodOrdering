@@ -23,15 +23,16 @@ namespace QRbasedFoodOrdering.Controllers
                 return NotFound();
             }
             // Update the order status to Paid
-            order.status = Models.OrderStatus.Completed;
+            order.status = OrderStatus.Completed;
             _context.Order.Update(order);
             await _context.SaveChangesAsync();
             // Redirect to the kitchen view or any other appropriate view
             return RedirectToAction("Bills");
+            //return View();
         }
         public async Task<IActionResult> Bills()
         {
-            var billOrders = await _context.Order.Include(o=>o.Table).Where(o=>o.status == Models.OrderStatus.BillRequested).OrderBy(o=>o.CreatedAt)
+            var billOrders = await _context.Order.Include(o=>o.Table).Where(o=>o.status == OrderStatus.BillRequested).OrderBy(o=>o.CreatedAt)
                 .ToListAsync();
             return View(billOrders);
         }

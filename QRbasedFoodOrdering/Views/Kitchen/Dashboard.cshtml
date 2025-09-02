@@ -9,7 +9,7 @@
     <table class="table table-bordered table-hover align-middle mt-4">
         <thead class="table-light">
             <tr>
-                <th>Table</th>
+                @* <th>Table</th> *@
                 <th>Order ID</th>
                 <th>Item</th>
                 <th>Quantity</th>
@@ -21,7 +21,7 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>@item.Order?.Table?.TableName</td>
+                    @* <td>@item.Order?.Table?.TableName</td> *@
                     <td>@item.OrderId</td>
                     <td>@item.FoodItem?.Title</td>
                     <td>@item.Quantity</td>

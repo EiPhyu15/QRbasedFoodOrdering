@@ -18,21 +18,7 @@ namespace QRbasedFoodOrdering.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> RequestBill(string guid)
-        {
-            if (string.IsNullOrEmpty(guid))
-                return NotFound();
-            var order = await _context.Order.FirstOrDefaultAsync(o => o.QRCode == guid && (o.status == OrderStatus.Comfirmed || o.status == OrderStatus.BillRequested));
-            if (order == null)
-            {
-                return NotFound();
-            }
-            order.status = OrderStatus.BillRequested;
-            await _context.SaveChangesAsync();
-            TempData["BillRequested"] = true;
-            return RedirectToAction("Cart", new { guid });
-
-        }
+        
         public async Task<IActionResult> Menu(string guid)
         {
             if (string.IsNullOrEmpty(guid))
@@ -42,16 +28,17 @@ namespace QRbasedFoodOrdering.Controllers
                 return View("OrderNotFound");
             var categories = await _context.Category.Include(c => c.FoodItems).ToListAsync();
             ViewBag.OrderId = order.OrderId;
+            ViewBag.Guid = guid;
             return View(categories);
 
         }
-        public async Task<IActionResult> AddToCart(int quantity, int fooditemid, string orderguid)
-        {
-            if (string.IsNullOrEmpty(orderguid) || quantity <= 0)
+        public async Task<IActionResult> AddToCart(int quantity, int fooditemid, int orderId)
+       {
+           if ( quantity <1)
             {
                 return BadRequest();
             }
-            var order = await _context.Order.FirstOrDefaultAsync(o => o.QRCode == orderguid && (o.status == OrderStatus.Pending || o.status == OrderStatus.Comfirmed));
+            var order = await _context.Order.FindAsync(orderId);
             if (order == null)
             {
                 return NotFound();
@@ -134,6 +121,24 @@ namespace QRbasedFoodOrdering.Controllers
             return RedirectToAction("Cart", new { guid });
 
 
+
+        }
+        public async Task<IActionResult> RequestBill(string guid)
+        {
+            if (string.IsNullOrEmpty(guid))
+                return NotFound();
+            var order = await _context.Order.FirstOrDefaultAsync(o => o.QRCode == guid && (o.status == OrderStatus.Comfirmed || o.status == OrderStatus.BillRequested));
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+
+            order.status = OrderStatus.BillRequested;
+            await _context.SaveChangesAsync();
+            TempData["BillRequested"] = true;
+
+            return RedirectToAction("Cart", new { guid });
 
         }
         // GET: Orders

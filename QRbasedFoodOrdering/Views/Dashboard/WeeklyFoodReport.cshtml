@@ -1,0 +1,39 @@
+﻿@model IEnumerable<QRbasedFoodOrdering.Models.WeeklyFoodReportViewModel>
+@{
+	ViewData["Title"] = "Weekly Food Report";
+	var daylabels = string.Join(", ", Model.Select(m => $"'{m.Day}'"));
+	var foodlabels = string.Join(", ", Model.Select(m => $"'{m.FoodTitle}'"));
+	var quantities = string.Join(", ", Model.Select(m => m.TotalQuantity));
+}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<title>@ViewData["Title"]</title>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<style>
+				body {
+					font-family: Arial, sans-serif;
+					margin: 20px;
+					background-color: #f4f4f4;
+				}
+				h1 {
+					text-align: center;
+					color: #333;
+				}
+				.chart-container {
+					width: 80%;
+					margin: auto;
+					background: #fff;
+					padding: 20px;
+					border-radius: 8px;
+					box-shadow: 0 0 10px rgba(0,0,0,0.1);
+				}
+
+		canvas {
+			max-width: 100%;
+		}
+	</style>
+
+	</head>
+</html>

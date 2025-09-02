@@ -25,24 +25,27 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item">
+                       @*  <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">
                                 MENU
 
-                            </a>
+                            </a> *@
                         </li>
-                        <li>
+                        @* <li>
                             <a class="nav-link text-dark" asp-area="" asp-controller="CartItems" asp-action="DisplayCart">My Cart (@ViewBag.count)</a>
-                        </li>
+                        </li> *@
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="container mb-8">
         <main role="main" class="pb-3">
             @RenderBody()
+            <br />
+            <br />
+            <br />
         </main>
     </div>
 

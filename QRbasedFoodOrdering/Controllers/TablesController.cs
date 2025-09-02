@@ -34,14 +34,13 @@ namespace QRbasedFoodOrdering.Controllers
                 return NotFound();
             }
 
-            var openorder = await _context.Order
-                 .FirstOrDefaultAsync(o => o.TableId == tableId && o.status == OrderStatus.Pending || o.status == OrderStatus.Completed);
-               
-            if (openorder != null)
-            {
-                // If an open order exists, redirect to the order details page
-                return BadRequest("An open order already exists for this table.");
-            }
+            //var openorder = await _context.Order
+            //     .FirstOrDefaultAsync(o => o.TableId == tableId && o.status == OrderStatus.Pending || o.status == OrderStatus.
+            //if (openorder != null)
+            //{
+            //    // If an open order exists, redirect to the order details page
+            //    return BadRequest("An open order already exists for this table.");
+            //}
             var guid = Guid.NewGuid().ToString();
             var order = new Order
             {
@@ -51,7 +50,16 @@ namespace QRbasedFoodOrdering.Controllers
                 status = OrderStatus.Pending,
             };
             _context.Order.Add(order);
+            
             await _context.SaveChangesAsync();
+            
+            if (table != null)
+            {
+                table.Status = TableStatus.Occupied; // Mark the table as occupied
+                _context.Update(table);
+                await _context.SaveChangesAsync();
+            }
+
             return RedirectToAction("QRCode", new { orderId = order.OrderId });
 
         }
