@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using QRCoder;
 
 namespace QRbasedFoodOrdering.Controllers
 {
+    
     public class TablesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -19,13 +21,36 @@ namespace QRbasedFoodOrdering.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> Assign()
+        //
+        public async Task<IActionResult> Assign1()
         {
-            var availableTables = await _context.Table.Where(t=>t.Status == TableStatus.Available)
-                .Include(t=>t.Orders).ToListAsync();
-            return View(availableTables);
-
+            var tables = await _context.Table.ToListAsync(); // load ALL tables
+            return View(tables);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> FreeTable(int tableId)
+        {
+            var table = await _context.Table.FindAsync(tableId);
+            if (table == null) return NotFound();
+
+            table.Status = TableStatus.Available;
+            _context.Update(table);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Assign1));
+        }
+
+
+
+
+        //public async Task<IActionResult> Assign()
+        //{
+        //    var availableTables = await _context.Table.Where(t=>t.Status == TableStatus.Available)
+        //        .Include(t=>t.Orders).ToListAsync();
+        //    return View(availableTables);
+
+        //}
         public async Task<IActionResult> AssignTable(int tableId)
         {
             var table = await _context.Table.FindAsync(tableId);
@@ -50,9 +75,9 @@ namespace QRbasedFoodOrdering.Controllers
                 status = OrderStatus.Pending,
             };
             _context.Order.Add(order);
-            
+
             await _context.SaveChangesAsync();
-            
+
             if (table != null)
             {
                 table.Status = TableStatus.Occupied; // Mark the table as occupied
@@ -68,13 +93,13 @@ namespace QRbasedFoodOrdering.Controllers
             var order = await _context.Order
                 .Include(o => o.Table)
                 .FirstOrDefaultAsync(o => o.OrderId == orderId);
-            if(order == null)
+            if (order == null)
             {
-                return NotFound( );
+                return NotFound();
             }
-            
-                
-            ViewBag.Order= order;
+
+
+            ViewBag.Order = order;
             return View(order);
 
 
@@ -133,7 +158,7 @@ namespace QRbasedFoodOrdering.Controllers
             //{
                 _context.Add(table);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Assign1));
             //}
             return View(table);
         }

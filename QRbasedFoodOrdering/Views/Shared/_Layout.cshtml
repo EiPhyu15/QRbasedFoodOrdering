@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿@* <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -19,22 +19,71 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
+
+						@if (User.IsInRole("Admin"))
+						{
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Tables" asp-action="Assign1">AssignTable</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">ManageOrders</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="OrderDetails" asp-action="Index">ManageOrderDetails</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Kitchen" asp-action="Bills">ManageBills</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">
+                                    AdminManage
+                                </a>
+
+
+                                <ul class="dropdown-menu">
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Tables" asp-action="Assign1">AssignTable</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">ManageOrders</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="OrderDetails" asp-action="Index">ManageOrderDetails</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Kitchen" asp-action="Bills">ManageBills</a>
+                                    </li>
+                                    <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Kitchen" asp-action="BillDetails">BillDetails</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Kitchen" asp-action="MarkPaid">ManageBill</a>
+                                </li> 
+                                </ul>
+                            </li> 
+						}
+                        
+                        
+                       
+
+                       
+                            
+                        
+                           
+
+                       
+
+                        
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                       @*  <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">
                                 MENU
 
-                            </a> *@
+                            </a> 
                         </li>
-                        @* <li>
+                        <li>
                             <a class="nav-link text-dark" asp-area="" asp-controller="CartItems" asp-action="DisplayCart">My Cart (@ViewBag.count)</a>
-                        </li> *@
-                    </ul>
+                        </li>
+                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
             </div>
@@ -60,3 +109,188 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+  *@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - QRbasedFoodOrdering</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/QRbasedFoodOrdering.styles.css" asp-append-version="true" />
+    <style>
+        body {
+            background-color: #f8f9fa;
+            margin: 0;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            height: 100vh;
+            background: #1e1e2f;
+            color: #fff;
+            padding-top: 1rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 240px;
+        }
+
+            .sidebar a {
+                color: #adb5bd;
+                text-decoration: none;
+                display: block;
+                padding: 12px 20px;
+                border-radius: 8px;
+                margin: 4px 0;
+                transition: all 0.2s;
+            }
+
+                .sidebar a:hover, .sidebar a.active {
+                    background: #0d6efd;
+                    color: #fff;
+                }
+
+        /* Content */
+        .content {
+            margin-left: 240px;
+            padding: 0; /* no extra padding */
+        }
+
+        /* Dashboard top bar */
+        .dashboard-bar {
+            background: #e9ecef;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0;
+        }
+
+        /* Hero Section (Image + Text) */
+        .hero-section {
+            position: relative;
+            margin: 0;
+        }
+
+            .hero-section img {
+                width: 100%;
+                height: auto;
+                display: block;
+            }
+
+        .hero-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #000;
+            background: rgba(255,255,255,0.6); /* optional transparent bg */
+            padding: 20px 30px;
+            border-radius: 12px;
+        }
+
+            .hero-text h1 {
+                font-weight: 700;
+                font-size: 2.5rem;
+            }
+
+            .hero-text p {
+                font-size: 1.2rem;
+                margin: 0;
+            }
+    </style>
+</head>
+<body>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="px-3 mb-4">
+                <h4 class="fw-bold">🍽 QR Food Ordering</h4>
+            </div>
+
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-controller="Tables" asp-action="Assign1" class="active">Assign Table</a>
+                <a asp-controller="Orders" asp-action="Index">Manage Orders</a>
+                <a asp-controller="OrderDetails" asp-action="Index">Order Details</a>
+                <a asp-controller="Kitchen" asp-action="Bills">Manage Bills</a>
+                <a asp-controller="Categories" asp-action="index">Category</a>
+                <a asp-controller="FoodItems" asp-action="index">FoodItem</a>
+            }
+            
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Dashboard Bar -->
+            <div class="dashboard-bar">
+                <span class="fw-semibold"> 🏠Restaurant Dashboard</span>
+                <div>
+                    <span>Hello @User.Identity.Name!</span> |
+                    <a asp-controller="Account" asp-action="Logout" class="text-dark">Logout</a>
+                </div>
+            </div>
+
+            <!-- Hero Section -->
+            @* <div class="hero-section">
+                <img src="~/images/restaurant.jpg" alt="Restaurant" />
+                <div class="hero-text">
+                    <h1>Welcome Our Restaurant</h1>
+                    <p>Explore Our Menu</p>
+                </div>
+            </div> *@
+
+            <!-- Main Body -->
+            <main role="main" class="p-4">
+                @RenderBody()
+            </main>
+
+            <!-- Footer -->
+            <footer class="mt-4 text-center text-muted small">
+                &copy; 2025 - QRbasedFoodOrdering
+            </footer>
+        </div>
+    }
+    else
+    {
+        <!-- Guest Layout (Before Login) -->
+        <header>
+            <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom shadow-sm mb-3">
+                <div class="container-fluid">
+                    <a class="navbar-brand" asp-controller="Home" asp-action="Index">🍽 QR Food Ordering Restaurant</a>
+                    <div class="collapse navbar-collapse">
+                        <ul class="navbar-nav ms-auto">
+                           @*  <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            </li> *@
+                        </ul>
+                        <partial name="_LoginPartial" />
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <div class="container">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                &copy; 2025 - QRbasedFoodOrdering
+            </div>
+        </footer>
+    }
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+

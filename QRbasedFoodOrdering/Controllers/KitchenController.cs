@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QRbasedFoodOrdering.Data;
 using QRbasedFoodOrdering.Models;
@@ -13,6 +14,8 @@ namespace QRbasedFoodOrdering.Controllers
         {
             _context = context;
         }
+        //[Authorize(Roles = "Admin")]
+
 
         [HttpPost]
         public async Task<IActionResult> MarkPaid(int orderId)
@@ -46,6 +49,7 @@ namespace QRbasedFoodOrdering.Controllers
             if (order == null)
                 return NotFound();
             return View(order);
+            
 
         }
         public async Task<IActionResult> Dashboard()

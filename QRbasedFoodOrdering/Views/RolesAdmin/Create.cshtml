@@ -1,0 +1,15 @@
+﻿@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityRole>
+<h2>Add Role</h2>
+@if (ViewBag.UserMessage != null)
+{
+	<h2>@ViewBag.UserMessage</h2>
+}
+<form asp-controller="RolesAdmin" asp-action="Create">
+	<div>
+		Role Name
+	</div>
+	<p>
+		@Html.TextBox("RoleName")
+	</p>
+	<input type="submit" class="btn btn-primary" value="Save" />
+</form>

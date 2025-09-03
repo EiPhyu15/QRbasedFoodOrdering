@@ -4,11 +4,11 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Orders Form</h1>
 
-<p>
+@* <p>
     <a asp-action="Create">Create New</a>
-</p>
+</p *@
 <table class="table">
     <thead>
         <tr>
@@ -16,11 +16,20 @@
                 @Html.DisplayNameFor(model => model.Table)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Table.TableName)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.CreatedAt)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.status)
+
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QRCode)
+
+            </th>
+
             <th></th>
         </tr>
     </thead>
@@ -30,12 +39,19 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Table.TableId)
             </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Table.TableName)
+                </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedAt)
             </td>
+               
             <td>
                 @Html.DisplayFor(modelItem => item.status)
             </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QRCode)
+                </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.OrderId">Details</a> |

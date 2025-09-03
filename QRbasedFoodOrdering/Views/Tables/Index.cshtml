@@ -20,8 +20,10 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.IsAvailable)
-            </th>
-            <th></th>
+            @* </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th> *@
         </tr>
     </thead>
     <tbody>
@@ -36,6 +38,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.IsAvailable)
             </td>
+                @* <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td> *@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.TableId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.TableId">Details</a> |

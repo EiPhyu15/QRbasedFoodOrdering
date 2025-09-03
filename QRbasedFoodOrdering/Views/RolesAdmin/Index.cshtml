@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityRole>
+<h1>Roles Admin</h1>
+<table class="table table-striped">
+	<tr>
+		<td>Existing Roles in the System</td>
+	</tr>
+	@foreach (var item in Model)
+	{
+		<tr>
+			<td>@item.Name</td>
+		</tr>
+
+	}
+
+</table>
+@Html.ActionLink("Create New Role", "Create", "RolesAdmin", 
+routeValues: null, htmlAttributes: new { @class = "btn btn-primary", 
+@role="button" })
+<hr />
+<div class="panel panel-info">
+ <div class="panel-heading">
+ Search User
+ </div>
+ <div class="panel-body">
+ <div class="row">
+ <div class="col-md-6">
+ 
+@using(Html.BeginForm("ManageUserRoles","RolesAdmin"))
+ {
+ <div class="form-inline">
+ @Html.TextArea("UserName")
+ </div>
+ <div class="form-inline">
+ <input type="submit" value="Search"
+class="btn btn-primary" />
+ </div> 
+ }
+ </div>
+ <div class="col-md-6">
+ @Html.ActionLink("or List All Users", "ListUsers", 
+"RolesAdmin", routeValues: null, htmlAttributes: new { @class = "btn btn-success", @role="button" })
+ </div>
+ </div>
+ </div>
+</div>

@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<QRbasedFoodOrdering.Models.FoodItem>
 
 
-@{
+@* @{
     ViewBag.Title = "Menu";
 }
 
@@ -9,9 +9,9 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold">Menu</h2>
         <a href="@Url.Action("Create")" class="btn btn-primary">+ Add New Item</a>
-    </div>
+    </div> *@
 
-    <div class="row g-4">
+    @* <div class="row g-4"> *@
         @*  @foreach (var item in Model)
         {
             <div class="card" style="width: 18rem; margin: 10px;">
@@ -58,7 +58,7 @@
         }
     </div>
 </div> *@
-        @foreach (var item in Model)
+        @* @foreach (var item in Model)
         {
             <div class="col-md-4 mb-4">
                 <div class="card shadow-sm h-100">
@@ -79,7 +79,7 @@
             </div>
         }
 
-
+ *@
 
 @* @{
     ViewData["Title"] = "Index";
@@ -208,3 +208,36 @@
     </tbody>
 </table>
  *@
+@{
+    ViewBag.Title = "Our Menu";
+}
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Menu</h2>
+        <a href="@Url.Action("Create")" class="btn btn-primary">+ Add New Item</a>
+    </div>
+    <div class="row g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 col-lg-3">
+                <div class="card h-100 shadow-sm border-0 rounded">
+                    <img src="~/images/@item.imageUrl" alt="@item.Title" width="100" height="100" />
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">@item.Title</h5>
+
+
+                        <p class="small text-secondary mb-3">
+                            @(item.IsActive ? "Available" : "Not Available")
+                        </p>
+                        <div class="d-flex justify-content-between">
+                            <a href="@Url.Action("Edit", new { id = item.FoodItemId })" class="btn btn-sm btn-outline-primary">Edit</a>
+                            <a href="@Url.Action("Details", new { id = item.FoodItemId })" class="btn btn-sm btn-outline-info">Details</a>
+                            <a href="@Url.Action("Delete", new { id = item.FoodItemId})" class="btn btn-sm btn-outline-danger">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,38 @@
+﻿@model QRbasedFoodOrdering.Models.UserRoleViewModel
+<h2>Manage Roles</h2>
+@if(Model!=null)
+{
+ <div class="panel panel-info">
+ <div class="panel-heading">
+ <div class="row">
+ <div class="col-md-8">
+ <h3>@Model.UserName</h3>
+ </div>
+			</div>
+		</div>
+		<div class="panel-body">
+			<form asp-controller="RolesAdmin" asp-action="UpdateRoles" class="form" method="post">
+				@Html.HiddenFor(m => m.UserId)
+				@Html.HiddenFor(m => m.UserName)
+				@for (int i = 0; i < Model.UserRoles.Count; i++)
+				{
+					<div class="checkbox" style="padding-left:25px">
+
+						@Html.CheckBoxFor(m => m.UserRoles[i].IsChecked, new
+							{ id = "userRoles_" + i })
+						@Html.HiddenFor(m => m.UserRoles[i].Id)
+						@Html.HiddenFor(m => m.UserRoles[i].Name)
+						@Html.DisplayFor(m => m.UserRoles[i].Name)
+					</div>
+				}
+				<input type="submit" value="Submit" class="btn btnprimary" />
+			</form>
+		</div>
+	</div>
+}
+else
+{
+	<h3>User not found</h3>
+	@Html.ActionLink("Back to Roles Admin", "Index", null, new
+		{ @class = "btn btn-primary" })
+}

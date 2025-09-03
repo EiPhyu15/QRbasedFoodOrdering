@@ -5,29 +5,26 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>OrderDetails Form</h1>
 
-<p>
+@* <p>
     <a asp-action="Create">Create New</a>
-</p>
+</p> *@
 <table class="table">
     <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Quantity)
             </th>
-            @* <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th> *@
             <th>
                 @Html.DisplayNameFor(model => model.Status)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Order)
+                @Html.DisplayNameFor(model => model.OrderId)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FoodItem)
-            </th>
+            @* <th>
+                @Html.DisplayNameFor(model => model.FoodItemId)
+            </th> *@
             <th>
                 @Html.DisplayNameFor(model => model.FoodItem.Title)
             </th>
@@ -40,9 +37,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Quantity)
             </td>
-            <td>
+           @*  <td>
                 @Html.DisplayFor(modelItem => item.Price)
-            </td>
+            </td> *@
             <td>
                 @Html.DisplayFor(modelItem => item.Status)
             </td>

@@ -18,7 +18,7 @@ namespace QRbasedFoodOrdering.Controllers
         {
             _context = context;
         }
-        
+       
         public async Task<IActionResult> Menu(string guid)
         {
             if (string.IsNullOrEmpty(guid))
@@ -123,6 +123,8 @@ namespace QRbasedFoodOrdering.Controllers
 
 
         }
+       
+        [HttpPost]
         public async Task<IActionResult> RequestBill(string guid)
         {
             if (string.IsNullOrEmpty(guid))
@@ -130,7 +132,7 @@ namespace QRbasedFoodOrdering.Controllers
             var order = await _context.Order.FirstOrDefaultAsync(o => o.QRCode == guid && (o.status == OrderStatus.Comfirmed || o.status == OrderStatus.BillRequested));
             if (order == null)
             {
-                return NotFound();
+                return View("OrderNotFound");
             }
 
 
@@ -139,8 +141,11 @@ namespace QRbasedFoodOrdering.Controllers
             TempData["BillRequested"] = true;
 
             return RedirectToAction("Cart", new { guid });
-
         }
+
+
+
+        //}
         // GET: Orders
         public async Task<IActionResult> Index()
         {

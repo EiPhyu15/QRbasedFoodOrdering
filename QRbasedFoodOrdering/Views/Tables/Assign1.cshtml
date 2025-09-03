@@ -1,0 +1,57 @@
+﻿@model IEnumerable<QRbasedFoodOrdering.Models.Table>
+
+@{
+    ViewData["Title"] = "Manage Tables";
+}
+
+<h2>Manage Tables</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Table Name</th>
+            <th>Capacity</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var table in Model)
+        {
+            <tr>
+                <td>@table.TableName</td>
+                <td>@table.Capacity</td>
+                <td>
+                    @if (table.Status == QRbasedFoodOrdering.Models.TableStatus.Available)
+                    {
+                        <span class="badge bg-success">Available</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Occupied</span>
+                    }
+                </td>
+                <td>
+                    @if (table.Status == QRbasedFoodOrdering.Models.TableStatus.Available)
+                    {
+                        <a asp-action="AssignTable"
+                           asp-route-tableId="@table.TableId"
+                           class="btn btn-primary btn-sm">
+                            Assign & Generate QR
+                        </a>
+                    }
+                    else
+                    {
+                        <form asp-action="FreeTable" method="post" style="display:inline">
+                            <input type="hidden" name="tableId" value="@table.TableId" />
+                            <button type="submit" class="btn btn-warning btn-sm">
+                                Free Table
+                            </button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
