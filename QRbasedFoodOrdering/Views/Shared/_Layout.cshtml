@@ -116,10 +116,35 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - QRbasedFoodOrdering</title>
+    <title>@ViewData["Title"] -  🏠QRbasedFoodOrdering</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/QRbasedFoodOrdering.styles.css" asp-append-version="true" />
+    <style>
+        #sidebar-wrapper {
+            background-color:darkslategrey; /* Dark background */
+            color: cornflowerblue;
+            min-height: 100vh; /* Full height */
+        }
+
+            #sidebar-wrapper .sidebar-heading {
+                font-size: 1.2rem;
+                color: lawngreen;
+            }
+
+            #sidebar-wrapper .list-group-item {
+                background-color: transparent;
+                color: white;
+                border: none;
+            }
+
+                #sidebar-wrapper .list-group-item:hover {
+                    background-color:green; /* Hover effect */
+                    padding-left: 12px;
+                    transition: 0.3s;
+                }
+    </style>
+
 </head>
 <body>
 
@@ -128,7 +153,7 @@
         <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    QRbasedFoodOrdering
+                    🏠 QRbasedFoodOrdering
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -148,7 +173,7 @@
         <!-- Sidebar only for Admin -->
         @if (User.IsInRole("Admin"))
         {
-            <div class="bg-light border-end" id="sidebar-wrapper" style="min-width: 300px; ">
+            <div class="border-end" id="sidebar-wrapper" style="min-width: 300px; ">
                 <div class="sidebar-heading fw-bold p-3">Admin Panel</div>
                 <div class="list-group list-group-flush">
                     @* <a class="list-group-item list-group-item-action" asp-area="" asp-controller="Admins" asp-action="AdminProfile">👤Admin Profile</a> *@
@@ -159,6 +184,7 @@
                     <a class="list-group-item list-group-item-action" asp-area="" asp-controller="Orders" asp-action="Index">📦Manage Orders Status</a>
                     <a class="list-group-item list-group-item-action" asp-area="" asp-controller="OrderDetails" asp-action="Index">📑Manage OrderDetail Status</a>
                     <a class="list-group-item list-group-item-action" asp-area="" asp-controller="Kitchen" asp-action="Bills">💳Manage Bills</a>
+                    <a class="list-group-item list-group-item-action" asp-area="" asp-controller="RolesAdmin" asp-action="Index">💳Manage Admin Roles</a>
                 </div>
             </div>
         }

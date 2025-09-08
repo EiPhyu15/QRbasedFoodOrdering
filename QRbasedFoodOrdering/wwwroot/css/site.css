@@ -1,4 +1,4 @@
-/*html {
+/**/html {
   font-size: 14px;
 }
 
@@ -19,11 +19,11 @@ html {
 
 body {
   margin-bottom: 60px;
-}*/
-#sidebar-wrapper {
-    background-color: darkgreen; /* dark green or any color you like */
-    min-height: 100vh; /* full height */
-    color: darkslateblue;
+}
+/*#sidebar-wrapper {
+    background-color: darkgreen;*/ /* dark green or any color you like */
+    /*min-height: 100vh;*/ /* full height */
+    /*color: darkslateblue;
 }
 
     #sidebar-wrapper .sidebar-heading {
@@ -38,7 +38,7 @@ body {
     }
 
         #sidebar-wrapper .list-group-item:hover {
-            background-color: #1e5631; /* hover effect */
-            color: #fff;
-        }
+            background-color: #1e5631;*/ /* hover effect */
+            /*color: #fff;
+        }*/
         
