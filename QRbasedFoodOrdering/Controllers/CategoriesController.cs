@@ -93,8 +93,8 @@ namespace QRbasedFoodOrdering.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 try
                 {
                     _context.Update(category);
@@ -112,7 +112,7 @@ namespace QRbasedFoodOrdering.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
+            //}
             return View(category);
         }
 

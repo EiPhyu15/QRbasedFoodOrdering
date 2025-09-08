@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using QRbasedFoodOrdering.Models;
+using QRbasedFoodOrdering.Controllers;
 
 namespace QRbasedFoodOrdering.Data
 {
@@ -16,5 +17,7 @@ namespace QRbasedFoodOrdering.Data
         public DbSet<QRbasedFoodOrdering.Models.Order> Order { get; set; } = default!;
         public DbSet<QRbasedFoodOrdering.Models.OrderDetail> OrderDetail { get; set; } = default!;
         public DbSet<QRbasedFoodOrdering.Models.CartItem> CartItem { get; set; } = default!;
+        public DbSet<QRbasedFoodOrdering.Models.CartItem> Admin { get; set; } = default!;
+
     }
 }

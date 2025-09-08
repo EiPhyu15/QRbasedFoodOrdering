@@ -57,7 +57,7 @@ namespace QRbasedFoodOrdering.Controllers
         // GET: FoodItems/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Category, "CategoryId", "CategoryId");
+            ViewData["CategoryId"] = new SelectList(_context.Category, "CategoryId", "Description");
             return View();
         }
 
@@ -91,7 +91,7 @@ namespace QRbasedFoodOrdering.Controllers
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Category, "CategoryId", "CategoryId", foodItem.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Category, "CategoryId", "Description", foodItem.CategoryId);
             return View(foodItem);
         }
 
@@ -107,8 +107,8 @@ namespace QRbasedFoodOrdering.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 try
                 {
                     _context.Update(foodItem);
@@ -126,7 +126,7 @@ namespace QRbasedFoodOrdering.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
+            //}
             ViewData["CategoryId"] = new SelectList(_context.Category, "CategoryId", "CategoryId", foodItem.CategoryId);
             return View(foodItem);
         }

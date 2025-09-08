@@ -52,28 +52,168 @@ namespace QRbasedFoodOrdering.Controllers
             
 
         }
+        //public async Task<IActionResult> Dashboard()
+        //{
+        //    var items = await _context.OrderDetail
+        //    .Include(oi => oi.Order)
+        //.Include(oi => oi.FoodItem)
+        //.Where(oi => (oi.Status == OrderDetailStatus.Comfirmed || oi.Status == OrderDetailStatus.Preparing)
+        //  && oi.Order != null && oi.Order.Table != null)
+        //.OrderBy(oi => oi.Status)
+        //.ThenBy(oi => oi.OrderId)
+        //.ToListAsync();
+        //    return View(items);
+        //}
         public async Task<IActionResult> Dashboard()
         {
             var items = await _context.OrderDetail
-            .Include(oi => oi.Order)
-        .Include(oi => oi.FoodItem)
-        .Where(oi => (oi.Status == OrderDetailStatus.Comfirmed || oi.Status == OrderDetailStatus.Preparing)
-          && oi.Order != null && oi.Order.Table != null)
-        .OrderBy(oi => oi.Status)
-        .ThenBy(oi => oi.OrderId)
-        .ToListAsync();
+                .Include(oi => oi.Order)
+                    .ThenInclude(o => o.Table)   // ✅ make sure Table is loaded
+                .Include(oi => oi.FoodItem)
+                .Where(oi => (oi.Status == OrderDetailStatus.Comfirmed
+                           || oi.Status == OrderDetailStatus.Preparing)
+                           && oi.Order != null && oi.Order.Table != null)
+                .OrderBy(oi => oi.Status)
+                .ThenBy(oi => oi.OrderId)
+                .ToListAsync();
+
             return View(items);
         }
+
+        //public async Task<IActionResult> UpdateStatus(int orderDetailId, int status)
+        //{
+        //    var item = await _context.OrderDetail.FindAsync(orderDetailId);
+        //    if (item == null)
+        //        return NotFound();
+        //    item.Status = (OrderDetailStatus)status;
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction("Dashboard");
+        //}
+
         public async Task<IActionResult> UpdateStatus(int orderDetailId, int status)
         {
-            var item = await _context.OrderDetail.FindAsync(orderDetailId);
+            var item = await _context.OrderDetail
+                .Include(od => od.Order)
+                .ThenInclude(o => o.Table)
+                .FirstOrDefaultAsync(od => od.OrderDetailId == orderDetailId);
+
             if (item == null)
                 return NotFound();
+
             item.Status = (OrderDetailStatus)status;
+
+            if (item.Order?.Table != null)
+            {
+                // If first item starts preparing → set table Preparing
+                if (status == (int)OrderDetailStatus.Preparing)
+                {
+                    item.Order.Table.Status = TableStatus.Preparing;
+                }
+
+                // If all items served → free the table
+                if (status == (int)OrderDetailStatus.Served)
+                {
+                    var allServed = await _context.OrderDetail
+                        .Where(od => od.OrderId == item.OrderId)
+                        .AllAsync(od => od.Status == OrderDetailStatus.Served);
+
+                    if (allServed)
+                    {
+                        item.Order.Table.Status = TableStatus.Available;
+                    }
+                }
+            }
+
             await _context.SaveChangesAsync();
+
             return RedirectToAction("Dashboard");
         }
+        //public async Task<IActionResult> UpdateStatus(int orderDetailId, int status)
+        //{
+        //    var item = await _context.OrderDetail
+        //        .Include(od => od.Order)
+        //        .ThenInclude(o => o.Table)
+        //        .FirstOrDefaultAsync(od => od.OrderDetailId == orderDetailId);
 
+        //    if (item == null)
+        //        return NotFound();
+
+        //    item.Status = (OrderDetailStatus)status;
+        //    await _context.SaveChangesAsync(); // save first so DB is up to date
+
+        //    if (item.Order?.Table != null)
+        //    {
+        //        // If first item starts preparing → set table Preparing
+        //        if (status == (int)OrderDetailStatus.Preparing)
+        //        {
+        //            item.Order.Table.Status = TableStatus.Preparing;
+        //        }
+
+        //        // If all items served → free the table
+        //        else if (status == (int)OrderDetailStatus.Served)
+        //        {
+        //            var allServed = await _context.OrderDetail
+        //                .Where(od => od.OrderId == item.OrderId)
+        //                .AllAsync(od => od.Status == OrderDetailStatus.Served);
+
+        //            if (allServed)
+        //            {
+        //                item.Order.Table.Status = TableStatus.Available;
+        //            }
+        //        }
+        //        _context.Update(item.Order.Table);
+        //        await _context.SaveChangesAsync();
+        //    }
+
+        //    // save table status change
+        //    return RedirectToAction("Dashboard");
+        //}
+        //public async Task<IActionResult> UpdateStatus(int orderDetailId, int status)
+        //{
+        //    var item = await _context.OrderDetail
+        //        .Include(od => od.Order)
+        //        .ThenInclude(o => o.Table)
+        //        .FirstOrDefaultAsync(od => od.OrderDetailId == orderDetailId);
+
+        //    if (item == null)
+        //        return NotFound();
+
+        //    // Update item status
+        //    item.Status = (OrderDetailStatus)status;
+        //    await _context.SaveChangesAsync(); // Save item first
+
+        //    if (item.Order?.Table != null)
+        //    {
+        //        if (status == (int)OrderDetailStatus.Preparing)
+        //        {
+        //            item.Order.Table.Status = TableStatus.Preparing;
+        //            item.Order.status = OrderStatus.Preparing;
+        //        }
+        //        else if (status == (int)OrderDetailStatus.Served)
+        //        {
+        //            // Check if ALL items in the order are served
+        //            var allServed = await _context.OrderDetail
+        //                .AsNoTracking()
+        //                .Where(od => od.OrderId == item.OrderId)
+        //                .AllAsync(od => od.Status == OrderDetailStatus.Served);
+
+        //            if (allServed)
+        //            {
+        //                // Mark order completed
+        //                item.Order.status = OrderStatus.Completed;
+
+        //                // Free table automatically
+        //                item.Order.Table.Status = TableStatus.Available;
+        //            }
+        //        }
+
+        //        _context.Update(item.Order);
+        //        _context.Update(item.Order.Table);
+        //        await _context.SaveChangesAsync();
+        //    }
+
+        //    return RedirectToAction("Dashboard");
+        //}
 
     }
 }

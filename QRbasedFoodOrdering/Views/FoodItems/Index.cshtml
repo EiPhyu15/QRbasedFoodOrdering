@@ -225,7 +225,10 @@
                     <img src="~/images/@item.imageUrl" alt="@item.Title" width="100" height="100" />
                     <div class="card-body">
                         <h5 class="card-title fw-bold">@item.Title</h5>
-
+                        <h6 class="card-title fw-bold">$@item.Price</h6>
+                        @* <p class="card-text">
+                            <span class="badge bg-info text-dark">@item.Category.Description</span>
+                        </p> *@
 
                         <p class="small text-secondary mb-3">
                             @(item.IsActive ? "Available" : "Not Available")

@@ -5,6 +5,7 @@
     {
         Pending,
         Comfirmed,
+        Preparing,
         Completed,
         BillRequested,
         Cancelled
@@ -22,6 +23,7 @@
     {
         Available,
         Occupied,
-        Reserved
+        Preparing,
+        Served
     }
 }

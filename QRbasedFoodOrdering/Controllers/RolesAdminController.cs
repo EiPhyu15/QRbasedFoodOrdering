@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace QRbasedFoodOrdering.Controllers
 {
-   // [Authorize(Roles ="SuperAdmin")]
+   [Authorize(Roles ="Admin")]
     public class RolesAdminController : Controller
     {
         private readonly ApplicationDbContext _context;

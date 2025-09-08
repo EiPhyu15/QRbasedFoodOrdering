@@ -21,12 +21,33 @@
             <tr>
                 <td>@table.TableName</td>
                 <td>@table.Capacity</td>
-                <td>
+               
+               @* <td>
                     @if (table.Status == QRbasedFoodOrdering.Models.TableStatus.Available)
                     {
                         <span class="badge bg-success">Available</span>
                     }
+                    else if (table.Status == QRbasedFoodOrdering.Models.TableStatus.Preparing)
+                    {
+                        <span class="badge bg-primary">Preparing</span>
+                    }
+                    else if (table.Status == QRbasedFoodOrdering.Models.TableStatus.Served)
+                    {
+                        <span class="badge bg-info text-dark">Served</span>
+                    }
                     else
+                    {
+                        <span class="badge bg-danger">Occupied</span>
+                    }
+               </td> *@
+                       
+                <td>
+
+                    @if (table.Status == QRbasedFoodOrdering.Models.TableStatus.Available)
+                    {
+                        <span class="badge bg-success">Available</span>
+                    }
+                    else 
                     {
                         <span class="badge bg-danger">Occupied</span>
                     }
@@ -39,15 +60,39 @@
                            class="btn btn-primary btn-sm">
                             Assign & Generate QR
                         </a>
+                        @* <form asp-action="AssignTable" method="post" style="display:inline">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="tableId" value="@table.TableId" />
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                Assign & Generate QR
+                            </button>
+                        </form> *@
                     }
                     else
                     {
-                        <form asp-action="FreeTable" method="post" style="display:inline">
+                        @* <form asp-action="FreeTable" method="post">
+                            <input type="hidden" name="tableId" value="@table.TableId" />
+                            <button type="submit" class="btn btn-danger"
+                            @(table.Orders.Any(o => o.status != OrderStatus.Completed) ? "disabled" : "")>
+                                Free Table
+                            </button>
+                        </form>
+ *@
+                       @*  <form asp-action="FreeTable" method="post" style="display:inline">
                             <input type="hidden" name="tableId" value="@table.TableId" />
                             <button type="submit" class="btn btn-warning btn-sm">
                                 Free Table
                             </button>
+                        </form> *@
+                        <form asp-action="FreeTable" method="post">
+                            <input type="hidden" name="tableId" value="@table.TableId" />
+                            <button type="submit" class="btn btn-danger"
+                            @(table.Orders?.Any(o => o.status != OrderStatus.Completed) == true ? "disabled" : "")>
+                                Free Table
+                            </button>
                         </form>
+
+
                     }
                 </td>
             </tr>

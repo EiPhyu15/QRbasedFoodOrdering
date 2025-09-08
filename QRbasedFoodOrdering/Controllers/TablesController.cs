@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,10 +17,12 @@ namespace QRbasedFoodOrdering.Controllers
     public class TablesController : Controller
     {
         private readonly ApplicationDbContext _context;
+       
 
         public TablesController(ApplicationDbContext context)
         {
             _context = context;
+            
         }
         //
         public async Task<IActionResult> Assign1()
@@ -29,15 +32,38 @@ namespace QRbasedFoodOrdering.Controllers
         }
 
         [HttpPost]
+        //public async Task<IActionResult> FreeTable(int tableId)
+        //{
+        //    var table = await _context.Table.FindAsync(tableId);
+        //    if (table == null) return NotFound();
+
+        //    table.Status = TableStatus.Available;
+        //    _context.Update(table);
+        //    await _context.SaveChangesAsync();
+
+        //    return RedirectToAction(nameof(Assign1));
+        //}
+       
         public async Task<IActionResult> FreeTable(int tableId)
         {
-            var table = await _context.Table.FindAsync(tableId);
+            var table = await _context.Table
+                .Include(t => t.Orders) // ✅ load related orders
+                .FirstOrDefaultAsync(t => t.TableId == tableId);
+
             if (table == null) return NotFound();
+
+            // double-check before freeing
+            if (table.Orders.Any(o => o.status != OrderStatus.Completed))
+            {
+                TempData["Error"] = "You cannot free this table until all orders are completed.";
+                return RedirectToAction(nameof(Assign1));
+            }
 
             table.Status = TableStatus.Available;
             _context.Update(table);
             await _context.SaveChangesAsync();
 
+            TempData["Success"] = "Table has been freed.";
             return RedirectToAction(nameof(Assign1));
         }
 
@@ -51,6 +77,9 @@ namespace QRbasedFoodOrdering.Controllers
         //    return View(availableTables);
 
         //}
+
+
+
         public async Task<IActionResult> AssignTable(int tableId)
         {
             var table = await _context.Table.FindAsync(tableId);
@@ -191,8 +220,8 @@ namespace QRbasedFoodOrdering.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 try
                 {
                     _context.Update(table);
@@ -210,7 +239,7 @@ namespace QRbasedFoodOrdering.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
+            //}
             return View(table);
         }
 
