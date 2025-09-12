@@ -1,0 +1,119 @@
+﻿@model List<QRbasedFoodOrdering.Models.WeeklySalesViewModel>
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Weekly Sales Report";
+
+    var weekLabels = string.Join(",", Model.Select(x =>
+    {
+        var firstDay = ISOWeek.ToDateTime(x.Year, x.Week, DayOfWeek.Monday);
+        var lastDay = firstDay.AddDays(6);
+        return $"'{firstDay:MMM d} - {lastDay:MMM d}'";
+    }));
+
+    var totalSales = string.Join(",", Model.Select(x => x.TotalSales));
+    var totalOrders = string.Join(",", Model.Select(x => x.TotalOrders));
+}
+
+@* @{
+    ViewData["Title"] = "Weekly Sales Report";
+
+    var weekLabels = string.Join(",", Model.Select(x => $"'W{x.Week} ({x.Year})'"));
+    
+    var totalSales = string.Join(",", Model.Select(x => x.TotalSales));
+    var totalOrders = string.Join(",", Model.Select(x => x.TotalOrders));
+} *@
+
+<div class="report-container">
+    <h1>@ViewData["Title"]</h1>
+    <h3>Total Sales: @Model.Sum(x => x.TotalSales).ToString("C")</h3>
+    <h4>Total Orders: @Model.Sum(x => x.TotalOrders)</h4>
+
+    <div class="chart-wrapper">
+        <canvas id="weeklySalesChart"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('weeklySalesChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [@Html.Raw(weekLabels)],
+            datasets: [
+                {
+                    label: 'Total Sales ($)',
+                    data: [@Html.Raw(totalSales)],
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    yAxisID: 'y1'
+                },
+                {
+                    label: 'Total Orders',
+                    data: [@Html.Raw(totalOrders)],
+                    backgroundColor: 'rgba(255, 159, 64, 0.6)',
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    borderWidth: 2,
+                    type: 'line',
+                    yAxisID: 'y2'
+                }
+            ]
+        },
+        // options: {
+        //     responsive: true,
+        //     plugins: {
+        //         title: {
+        //             display: true,
+        //             text: 'Weekly Sales vs Orders'
+        //         }
+        //     },
+        //     scales: {
+        //         y1: {
+        //             beginAtZero: true,
+        //             position: 'left',
+        //             title: { display: true, text: 'Sales ($)' }
+        //         },
+        //         y2: {
+        //             beginAtZero: true,
+        //             position: 'right',
+        //             grid: { drawOnChartArea: false },
+        //             title: { display: true, text: 'Orders' }
+        //         }
+        //     }
+        // }
+            options: {
+        responsive: true,
+        plugins: {
+            title: {
+                display: true,
+                text: 'Weekly Sales vs Orders'
+            }
+        },
+        scales: {
+            y1: {
+                beginAtZero: true,
+                position: 'left',
+                title: { display: true, text: 'Sales ($)' }
+            },
+            y2: {
+                beginAtZero: true,
+                position: 'right',
+                grid: { drawOnChartArea: false },
+                title: { display: true, text: 'Orders' },
+                ticks: {
+                    stepSize: 1,
+                    callback: function(value) {
+                        return Number.isInteger(value) ? value : null;
+                    }
+                },
+                suggestedMin: 0,
+                suggestedMax: Math.max(@Model.Sum(x => x.TotalOrders), 3)
+            }
+        }
+    }
+
+    });
+</script>
+

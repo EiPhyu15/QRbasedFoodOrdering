@@ -18,15 +18,15 @@ namespace QRbasedFoodOrdering.Controllers
         {
             _context = context;
         }
-        public IActionResult ByCategory(int? id)
-        {
+        //public IActionResult ByCategory(int? id)
+        //{
 
-            var items = _context.FoodItem
-                .Include(f => f.Category)
-                .Where(f => f.CategoryId == id)
-                .ToList();
-            return View(items);
-        }
+        //    var items = _context.FoodItem
+        //        .Include(f => f.Category)
+        //        .Where(f => f.CategoryId == id)
+        //        .ToList();
+        //    return View(items);
+        //}
 
         // GET: FoodItems
         public async Task<IActionResult> Index()
