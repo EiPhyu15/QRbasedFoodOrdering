@@ -13,5 +13,16 @@
         public double TotalSales { get; set; }
         public int TotalOrders { get; set; }
     }
+    public class PopularFoodReportViewModel
+    {
+        public DateTime StartDate { get; set; }   // Beginning of the week
+        public DateTime EndDate { get; set; }     // End of the week
+        public int FoodItemId { get; set; }
+        public string FoodItemName { get; set; }
+        public int TotalQuantity { get; set; }
+    }
+
+   
+
 
 }

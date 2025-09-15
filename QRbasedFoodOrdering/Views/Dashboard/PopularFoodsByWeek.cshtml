@@ -1,0 +1,77 @@
+﻿@model IEnumerable<QRbasedFoodOrdering.Models.PopularFoodReportViewModel>
+
+@{
+    ViewData["Title"] = "Popular Foods By Week";
+
+    // Serialize data for Chart.js
+    var chartData = Model
+        .GroupBy(m => $"{m.StartDate:yyyy-MM-dd} to {m.EndDate:yyyy-MM-dd}")
+        .ToDictionary(
+            g => g.Key,
+            g => g.Select(x => new { x.FoodItemName, x.TotalQuantity })
+        );
+}
+
+<h2>Popular Foods By Week</h2>
+
+<div class="row">
+    <div class="col-md-12">
+        <canvas id="weeklyChart" width="900" height="450"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Data from C#
+    var chartData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(chartData));
+
+    var weekLabels = Object.keys(chartData);
+    var allFoods = [...new Set([].concat(...Object.values(chartData).map(foods => foods.map(f => f.FoodItemName))))];
+
+    // Build dataset per food
+    var datasets = allFoods.map(food => {
+        return {
+            label: food,
+            data: weekLabels.map(week => {
+                var item = chartData[week].find(f => f.FoodItemName === food);
+                return item ? item.TotalQuantity : 0;
+            }),
+            backgroundColor: getRandomColor()
+        };
+    });
+
+    function getRandomColor() {
+        return 'rgba(' + Math.floor(Math.random() * 255) + ',' +
+                        Math.floor(Math.random() * 255) + ',' +
+                        Math.floor(Math.random() * 255) + ', 0.7)';
+    }
+
+    // Render chart
+    new Chart(document.getElementById("weeklyChart"), {
+        type: 'bar',
+        data: {
+            labels: weekLabels,
+            datasets: datasets
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: "Top Foods by Week"
+                },
+                legend: {
+                    position: 'top'
+                }
+            },
+            scales: {
+                x: { stacked: false }, // Change to true for stacked bars
+                y: {
+                    beginAtZero: true,
+                    stacked: false
+                }
+            }
+        }
+    });
+</script>
+

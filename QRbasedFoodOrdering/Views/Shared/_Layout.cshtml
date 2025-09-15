@@ -175,8 +175,8 @@
         {
             <div class="border-end" id="sidebar-wrapper" style="min-width: 300px; ">
                 <div class="sidebar-heading fw-bold p-3">Admin Panel</div>
-                <div class="list-group list-group-flush">
-                    @* <a class="list-group-item list-group-item-action" asp-area="" asp-controller="Admins" asp-action="AdminProfile">👤Admin Profile</a> *@
+                @* <div class="list-group list-group-flush">
+                    <a class="list-group-item list-group-item-action" asp-area="" asp-controller="Admins" asp-action="AdminProfile">👤Admin Profile</a> 
                     <a class="list-group-item list-group-item-action" asp-area="" asp-controller="Categories" asp-action="Index">📋Manage Category</a>
                     <a class="list-group-item list-group-item-action" asp-area="" asp-controller="FoodItems" asp-action="Index">📋Manage Food Item</a>
                     <a class="list-group-item list-group-item-action" asp-area="" asp-controller="Tables" asp-action="Index">📋Manage Tables</a>
@@ -184,8 +184,49 @@
                     <a class="list-group-item list-group-item-action" asp-area="" asp-controller="Orders" asp-action="Index">📦Manage Orders Status</a>
                     <a class="list-group-item list-group-item-action" asp-area="" asp-controller="OrderDetails" asp-action="Index">📑Manage OrderDetail Status</a>
                     <a class="list-group-item list-group-item-action" asp-area="" asp-controller="Kitchen" asp-action="Bills">💳Manage Bills</a>
+                    <a class="list-group-item list-group-item-action" asp-area="" asp-controller="Dashboard" asp-action="Index">💳Report</a>
+                    
                     <a class="list-group-item list-group-item-action" asp-area="" asp-controller="RolesAdmin" asp-action="Index">💳Manage Admin Roles</a>
+                </div> *@
+                <div class="list-group list-group-flush">
+                    <a class="list-group-item list-group-item-action" asp-area="" asp-controller="Categories" asp-action="Index">📋 Manage Category</a>
+                    <a class="list-group-item list-group-item-action" asp-area="" asp-controller="FoodItems" asp-action="Index">📋 Manage Food Item</a>
+                    <a class="list-group-item list-group-item-action" asp-area="" asp-controller="Tables" asp-action="Index">📋 Manage Tables</a>
+                    <a class="list-group-item list-group-item-action" asp-area="" asp-controller="Tables" asp-action="Assign1">🪑 Assign Tables</a>
+                    <a class="list-group-item list-group-item-action" asp-area="" asp-controller="Orders" asp-action="Index">📦 Manage Orders Status</a>
+                    <a class="list-group-item list-group-item-action" asp-area="" asp-controller="OrderDetails" asp-action="Index">📑 Manage OrderDetail Status</a>
+                    <a class="list-group-item list-group-item-action" asp-area="" asp-controller="Kitchen" asp-action="Bills">💳 Manage Bills</a>
+
+                    <!-- ✅ Report with Sub-items -->
+                    <div class="list-group-item bg-transparent text-white fw-bold">
+                        📊 Report
+                        <ul class="list-unstyled ms-3 mt-2">
+                            <li>
+                                <a class="list-group-item list-group-item-action bg-transparent text-white" asp-area="" asp-controller="Dashboard" asp-action="DailySales">
+                                    📆 Daily Sales Report
+                                </a>
+                            </li>
+                            <li>
+                                <a class="list-group-item list-group-item-action bg-transparent text-white" asp-area="" asp-controller="Dashboard" asp-action="WeeklySales">
+                                    📅 Weekly Sales Report
+                                </a>
+                            </li>
+                            <li>
+                                <a class="list-group-item list-group-item-action bg-transparent text-white" asp-area="" asp-controller="Dashboard" asp-action="PopularFoodsByWeek">
+                                    📅Popular Food Item Report by Week
+                                </a>
+                            </li>
+                            <li>
+                                <a class="list-group-item list-group-item-action bg-transparent text-white" asp-area="" asp-controller="Dashboard" asp-action="FoodOrdersByDay">
+                                    📅 Food Order Report by Day
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <a class="list-group-item list-group-item-action" asp-area="" asp-controller="RolesAdmin" asp-action="Index">👤 Manage Admin Roles</a>
                 </div>
+
             </div>
         }
 

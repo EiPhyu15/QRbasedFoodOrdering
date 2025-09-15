@@ -1,0 +1,45 @@
+﻿@{
+    var days = (List<string>)ViewBag.Days;
+    var chartData = ViewBag.ChartData;
+}
+
+<h2>Food Orders by Day of Week</h2>
+
+<canvas id="ordersChart" width="800" height="400"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('ordersChart').getContext('2d');
+
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(days)),
+            datasets: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(chartData))
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Orders by Day of Week'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Total Orders'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Day of Week'
+                    }
+                }
+            }
+        }
+    });
+</script>
