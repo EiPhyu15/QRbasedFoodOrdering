@@ -1,4 +1,4 @@
-﻿@model List<QRbasedFoodOrdering.Models.DailySalesViewModel>
+﻿@* @model List<QRbasedFoodOrdering.Models.DailySalesViewModel>
 
 @{
     ViewData["Title"] = "Daily Sales Report";
@@ -99,3 +99,113 @@
 </body>
 </html>
 
+
+
+  *@
+  @model List<QRbasedFoodOrdering.Models.DailySalesViewModel>
+@using Newtonsoft.Json
+
+@{
+    ViewData["Title"] = "Daily Sales Report";
+
+    // Serialize data safely as JSON arrays
+    var datelabels = JsonConvert.SerializeObject(Model.Select(x => x.Date.ToString("yyyy-MM-dd")));
+    var totalsales = JsonConvert.SerializeObject(Model.Select(x => x.TotalSales));
+    var totalorders = JsonConvert.SerializeObject(Model.Select(x => x.TotalOrders));
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .report-container {
+            width: 90%;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            border: solid 1px #ddd;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+
+        .chart-wrapper {
+            margin-top: 30px;
+        }
+
+        #dailySalesChart {
+            min-height: 400px; /* prevents collapsing */
+        }
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <h1>@ViewData["Title"]</h1>
+        <h3>Total Sales: @Model.Sum(x => x.TotalSales).ToString("C")</h3>
+        <h4>Total Orders: @Model.Sum(x => x.TotalOrders)</h4>
+
+        <div class="chart-wrapper">
+            <canvas id="dailySalesChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('dailySalesChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(datelabels),
+                datasets: [
+                    {
+                        label: 'Total Sales ($)',
+                        data: @Html.Raw(totalsales),
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                        yAxisID: 'y1'
+                    },
+                    {
+                        label: 'Total Orders',
+                        data: @Html.Raw(totalorders),
+                        backgroundColor: 'rgba(255, 159, 64, 0.6)',
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        borderWidth: 2,
+                        type: 'line',
+                        yAxisID: 'y2'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Daily Sales vs Orders'
+                    }
+                },
+                scales: {
+                    y1: {
+                        beginAtZero: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'Sales ($)'
+                        }
+                    },
+                    y2: {
+                        beginAtZero: true,
+                        position: 'right',
+                        grid: { drawOnChartArea: false },
+                        title: {
+                            display: true,
+                            text: 'Orders'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

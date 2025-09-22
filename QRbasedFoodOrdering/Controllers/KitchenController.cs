@@ -30,7 +30,7 @@ namespace QRbasedFoodOrdering.Controllers
             _context.Order.Update(order);
             await _context.SaveChangesAsync();
             // Redirect to the kitchen view or any other appropriate view
-            return RedirectToAction("Bills");
+            return RedirectToAction("BillsS");
             //return View();
         }
         public async Task<IActionResult> Bills()
@@ -52,23 +52,12 @@ namespace QRbasedFoodOrdering.Controllers
             
 
         }
-        //public async Task<IActionResult> Dashboard()
-        //{
-        //    var items = await _context.OrderDetail
-        //    .Include(oi => oi.Order)
-        //.Include(oi => oi.FoodItem)
-        //.Where(oi => (oi.Status == OrderDetailStatus.Comfirmed || oi.Status == OrderDetailStatus.Preparing)
-        //  && oi.Order != null && oi.Order.Table != null)
-        //.OrderBy(oi => oi.Status)
-        //.ThenBy(oi => oi.OrderId)
-        //.ToListAsync();
-        //    return View(items);
-        //}
+       
         public async Task<IActionResult> Dashboard()
         {
             var items = await _context.OrderDetail
                 .Include(oi => oi.Order)
-                    .ThenInclude(o => o.Table)   // ✅ make sure Table is loaded
+                    .ThenInclude(o => o.Table)  
                 .Include(oi => oi.FoodItem)
                 .Where(oi => (oi.Status == OrderDetailStatus.Comfirmed
                            || oi.Status == OrderDetailStatus.Preparing)

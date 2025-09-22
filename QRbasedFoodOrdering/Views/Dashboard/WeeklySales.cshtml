@@ -116,7 +116,7 @@
 
     });
 </script> *@
- @model List<QRbasedFoodOrdering.Models.WeeklySalesViewModel>
+ @* @model List<QRbasedFoodOrdering.Models.WeeklySalesViewModel>
 @using System.Globalization
 
 @{
@@ -189,4 +189,320 @@
     });
 </script>
 
- 
+
+  @* @model List<QRbasedFoodOrdering.Models.WeeklySalesViewModel>
+@using System.Globalization
+@using Newtonsoft.Json
+
+@{
+    ViewData["Title"] = "Weekly Sales Report";
+
+    // Convert weeks into readable labels
+    var weekLabels = Model.Select(x =>
+    {
+        var firstDay = ISOWeek.ToDateTime(x.Year, x.Week, DayOfWeek.Monday);
+        var lastDay = firstDay.AddDays(6);
+        return $"{firstDay:MMM d} - {lastDay:MMM d}";
+    }).ToList();
+
+    // Safely serialize to JSON
+    var weekLabelsJson = JsonConvert.SerializeObject(weekLabels);
+    var totalSalesJson = JsonConvert.SerializeObject(Model.Select(x => x.TotalSales));
+    var totalOrdersJson = JsonConvert.SerializeObject(Model.Select(x => x.TotalOrders));
+}
+
+<div class="report-container">
+    <h1>@ViewData["Title"]</h1>
+    <h3>Total Sales: @Model.Sum(x => x.TotalSales).ToString("C")</h3>
+    <h4>Total Orders: @Model.Sum(x => x.TotalOrders)</h4>
+
+    <div class="chart-wrapper">
+        <canvas id="weeklySalesChart"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('weeklySalesChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: @Html.Raw(weekLabelsJson),
+            datasets: [
+                {
+                    label: 'Total Sales ($)',
+                    data: @Html.Raw(totalSalesJson),
+                    backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Total Orders',
+                    data: @Html.Raw(totalOrdersJson),
+                    backgroundColor: 'rgba(255, 159, 64, 0.7)',
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Weekly Sales vs Orders (Stacked)'
+                }
+            },
+            scales: {
+                x: {
+                    stacked: true
+                },
+                y: {
+                    stacked: true,
+                    beginAtZero: true,
+                    title: { display: true, text: 'Sales + Orders' }
+                }
+            }
+        }
+    });
+</script>
+ *@
+ @* @model List<QRbasedFoodOrdering.Models.WeeklySalesViewModel>
+@using System.Globalization
+@using Newtonsoft.Json
+
+@{
+    ViewData["Title"] = "Weekly Sales Report";
+
+    var weekLabels = Model.Select(x =>
+    {
+        var firstDay = ISOWeek.ToDateTime(x.Year, x.Week, DayOfWeek.Monday);
+        var lastDay = firstDay.AddDays(6);
+        return $"{firstDay:MMM d} - {lastDay:MMM d}";
+    }).ToList();
+
+    var totalSales = Model.Select(x => x.TotalSales).ToList();
+    var totalOrders = Model.Select(x => x.TotalOrders).ToList();
+
+    var weekLabelsJson = JsonConvert.SerializeObject(weekLabels);
+    var totalSalesJson = JsonConvert.SerializeObject(totalSales);
+    var totalOrdersJson = JsonConvert.SerializeObject(totalOrders);
+}
+
+<div class="report-container">
+    <h1>@ViewData["Title"]</h1>
+    <h3>Total Sales: @Model.Sum(x => x.TotalSales).ToString("C")</h3>
+    <h4>Total Orders: @Model.Sum(x => x.TotalOrders)</h4>
+
+    <div class="chart-wrapper">
+        <canvas id="weeklySalesChart"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const labels = @Html.Raw(weekLabelsJson);
+    const salesData = @Html.Raw(totalSalesJson);
+    const ordersData = @Html.Raw(totalOrdersJson);
+
+    new Chart(document.getElementById('weeklySalesChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Total Sales ($)',
+                    data: salesData,
+                    backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Total Orders',
+                    data: ordersData,
+                    backgroundColor: 'rgba(255, 159, 64, 0.7)',
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Weekly Sales vs Orders (Stacked)'
+                }
+            },
+            scales: {
+                x: { stacked: true },
+                y: { stacked: true, beginAtZero: true }
+            }
+        }
+    });
+</script>
+ *@
+ @* @model List<QRbasedFoodOrdering.Models.WeeklySalesViewModel>
+@using System.Globalization
+@using Newtonsoft.Json
+
+@{
+    ViewData["Title"] = "Weekly Sales Report";
+
+    var weekLabels = Model.Select(x =>
+    {
+        var firstDay = ISOWeek.ToDateTime(x.Year, x.Week, DayOfWeek.Monday);
+        var lastDay = firstDay.AddDays(6);
+        return $"{firstDay:MMM d} - {lastDay:MMM d}";
+    }).ToList();
+
+    var totalSales = Model.Select(x => x.TotalSales).ToList();
+    var totalOrders = Model.Select(x => x.TotalOrders).ToList();
+
+    var weekLabelsJson = JsonConvert.SerializeObject(weekLabels);
+    var totalSalesJson = JsonConvert.SerializeObject(totalSales);
+    var totalOrdersJson = JsonConvert.SerializeObject(totalOrders);
+}
+
+<div class="report-container">
+    <h1>@ViewData["Title"]</h1>
+    <h3>Total Sales: @Model.Sum(x => x.TotalSales).ToString("C")</h3>
+    <h4>Total Orders: @Model.Sum(x => x.TotalOrders)</h4>
+
+    <div class="chart-wrapper">
+        <canvas id="weeklySalesChart"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const labels = @Html.Raw(weekLabelsJson);
+    const salesData = @Html.Raw(totalSalesJson);
+    const ordersData = @Html.Raw(totalOrdersJson);
+
+    new Chart(document.getElementById('weeklySalesChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Total Sales ($)',
+                    data: salesData,
+                    backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Total Orders',
+                    data: ordersData,
+                    backgroundColor: 'rgba(255, 159, 64, 0.7)',
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            animation: false,
+            events: [], // disable hover/click
+            plugins: {
+                title: { display: true, text: 'Weekly Sales vs Orders (Static)' },
+                tooltip: { enabled: false },
+                legend: { display: false }
+            },
+            scales: {
+                x: { stacked: true },
+                y: { stacked: true, beginAtZero: true }
+            }
+        }
+    });
+</script> *@
+@model List<QRbasedFoodOrdering.Models.WeeklySalesViewModel>
+@using System.Globalization
+@using Newtonsoft.Json
+
+@{
+    ViewData["Title"] = "Weekly Sales Report";
+
+    var weekLabels = Model.Select(x =>
+    {
+        var firstDay = ISOWeek.ToDateTime(x.Year, x.Week, DayOfWeek.Monday);
+        var lastDay = firstDay.AddDays(6);
+        return $"{firstDay:MMM d} - {lastDay:MMM d}";
+    }).ToList();
+
+    // ✅ FIX 1: format numbers using InvariantCulture so Chart.js gets valid JSON
+    var totalSales = Model.Select(x => x.TotalSales.ToString("F2", CultureInfo.InvariantCulture)).ToList();
+    var totalOrders = Model.Select(x => x.TotalOrders).ToList();
+
+    var weekLabelsJson = JsonConvert.SerializeObject(weekLabels);
+    var totalSalesJson = JsonConvert.SerializeObject(totalSales);
+    var totalOrdersJson = JsonConvert.SerializeObject(totalOrders);
+}
+
+<div class="report-container">
+    <h1>@ViewData["Title"]</h1>
+    <h3>Total Sales: @Model.Sum(x => x.TotalSales).ToString("C")</h3>
+    <h4>Total Orders: @Model.Sum(x => x.TotalOrders)</h4>
+
+    <div class="chart-wrapper">
+        <canvas id="weeklySalesChart"></canvas>
+    </div>
+</div>
+
+<style>
+    .chart-wrapper {
+        width: 100%;
+        height: 400px; /* ✅ FIX 2: prevent chart collapsing */
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {   // ✅ FIX 3: ensure DOM is ready
+        const labels = @Html.Raw(weekLabelsJson);
+        const salesData = @Html.Raw(totalSalesJson);
+        const ordersData = @Html.Raw(totalOrdersJson);
+
+        console.log("Labels:", labels, "Sales:", salesData, "Orders:", ordersData); // ✅ Debug
+
+        new Chart(document.getElementById('weeklySalesChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Total Sales ($)',
+                        data: salesData,
+                        backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                        stack: 'stack1'
+                    },
+                    {
+                        label: 'Total Orders',
+                        data: ordersData,
+                        backgroundColor: 'rgba(255, 159, 64, 0.7)',
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        borderWidth: 1,
+                        stack: 'stack1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: false,
+                plugins: {
+                    title: { display: true, text: 'Weekly Sales vs Orders (Static)' }
+                },
+                scales: {
+                    x: { stacked: true },
+                    y: { stacked: true, beginAtZero: true }
+                }
+            }
+        });
+    });
+</script>
+
+
